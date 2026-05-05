@@ -20,8 +20,10 @@ This MVP is a Chrome/Edge-compatible Manifest V3 extension. It is intentionally 
 - Suggests asking the saved trusted contact when high-risk signs are found.
 - Scans visible page text lightly with a content script.
 - Shows a non-intrusive warning banner when high-risk signs are found on a page.
+- Supports trusted domains, blocked domains, and per-site banner dismissal.
 - Saves trusted contact and family setup settings locally.
 - Saves a small local history of recent checks using short previews only.
+- Includes a local demo page with fake scam examples.
 - Uses `chrome.storage.local` for settings and history.
 
 ## What it does not do yet
@@ -66,6 +68,11 @@ src/
     types.ts
     constants.ts
 
+demo/
+  demo.html
+  demo.css
+  demo.js
+
 public/
   icons/
     README.md
@@ -101,6 +108,30 @@ The setup guide can also be reopened from:
 
 - The popup footer.
 - The options/settings page.
+
+## Trusted and blocked domains
+
+The options page supports local website lists:
+
+- Trusted domains reduce warning noise and can suppress page banners on those sites.
+- Blocked domains raise risk when they appear in pasted messages or links.
+- “Don’t warn on this site” choices are stored locally and can be reset from Settings.
+
+Trusted domains never mean “definitely safe”. Silver Shield still uses careful wording and should not guarantee safety.
+
+## Demo page
+
+Open `demo/demo.html` locally in your browser to test examples. It includes fake messages for:
+
+- Royal Mail parcel fee.
+- HMRC refund.
+- Bank verification code request.
+- WhatsApp-style “Hi Mum, lost my phone”.
+- Microsoft support remote access.
+- Crypto/investment pressure.
+- Normal harmless message.
+
+The demo page has copy buttons so you can paste examples into the extension popup.
 
 ## Permissions model
 
@@ -161,8 +192,12 @@ The test script checks sample cases for:
 - Fake HMRC tax refund message.
 - Fake bank verification code request.
 - Family “lost phone” message.
+- Fake DVLA penalty message.
+- Fake Microsoft remote access support message.
 - Normal harmless message.
 - Shortened and non-HTTPS URL detection.
+- Blocked-domain scoring.
+- Trusted/dismissed site page-warning suppression.
 
 ## Local scam-risk analyser
 
@@ -171,7 +206,10 @@ The first rule engine is deterministic and local. It looks for warning signs suc
 - Urgency: “act now”, “limited time”, “urgent”, “within 24 hours”.
 - Money pressure: “send money”, “bank transfer”, “gift card”, “crypto”, “refund fee”.
 - Credential requests: “password”, “verification code”, “PIN”, “login details”.
-- Impersonation: “HMRC”, “bank”, “Royal Mail”, “police”, “Microsoft support”.
+- Impersonation: “HMRC”, “bank”, “Royal Mail”, “Evri”, “DPD”, “DVLA”, “NHS”, “Microsoft support”.
+- Parcel scams: redelivery fees, customs fees, missed delivery hooks.
+- Bank scams: OTP, verification code, transaction approval hooks.
+- Remote access scams: AnyDesk, TeamViewer, fake support, device virus claims.
 - Suspicious links: shortened URLs, non-HTTPS links, odd domains, lookalike wording.
 - Emotional manipulation: “family emergency”, “I lost my phone”, “don’t tell anyone”.
 - Prize/refund hooks: “you won”, “refund pending”, “parcel fee”, “tax rebate”.
@@ -200,6 +238,7 @@ Silver Shield is local-only in this MVP.
 - History stores only a timestamp, risk level, score, matched signal count, and a short preview of the checked text.
 - Full checked text is not stored by default.
 - Trusted contact details are stored locally only.
+- Trusted/blocked domains and dismissed-site choices are stored locally only.
 
 Future AI checking would require explicit consent, clear privacy copy, and careful handling of sensitive content. Users should avoid pasting passwords, bank details, PINs, or verification codes.
 
@@ -225,9 +264,13 @@ Use careful wording:
 
 Chrome/Edge desktop extension MVP with onboarding and local trusted-contact setup.
 
+### Phase 1.5
+
+Demo page, stronger UK rules, trusted/blocked domain controls, and per-site banner dismissal.
+
 ### Phase 2
 
-Better rule engine, allowlist/blocklist, stronger suspicious-domain detection, and a proper family contact workflow.
+Better rule engine, allowlist/blocklist refinement, stronger suspicious-domain detection, and a proper family contact workflow.
 
 ### Phase 3
 
@@ -244,8 +287,7 @@ iPhone/iPad family setup flow.
 ## Suggested next build tasks
 
 - Replace generated placeholder icons with polished Silver Shield PNG icons.
-- Add an allowlist for known trusted sites.
-- Add a local blocklist/watchlist for suspicious domains.
-- Add better per-site banner dismissal so dismissing one page does not hide all future warnings.
+- Add a printable/exportable one-page family safety checklist.
 - Add accessibility testing with keyboard-only navigation and screen reader labels.
-- Add an exportable one-page family safety checklist.
+- Add optional custom rule packs for UK scams.
+- Add an onboarding step that teaches users to pin the extension.
