@@ -3,8 +3,11 @@ export const EXTENSION_NAME = "Silver Shield";
 export const DEFAULT_SETTINGS = {
   trustedContactName: "",
   trustedContactContact: "",
+  protectedPersonName: "",
+  installerRelationship: "",
   sensitivity: "normal",
   warningBannersEnabled: true,
+  onboardingCompleted: false,
   emergencyHelpText:
     "If money was sent or bank details were shared, contact your bank immediately using the number on the back of your card. In the UK, you can also report scams to Action Fraud.",
 };
