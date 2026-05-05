@@ -12,6 +12,7 @@ export const SCAM_SIGNAL_RULES = [
       /\bwithin 24 hours\b/i,
       /\bexpires? today\b/i,
       /\bfinal warning\b/i,
+      /\bavoid (?:a )?(?:fine|penalty|charge)\b/i,
     ],
     explanation:
       "Scams often create time pressure so people act before checking properly.",
@@ -32,6 +33,8 @@ export const SCAM_SIGNAL_RULES = [
       /\badmin fee\b/i,
       /\bprocessing fee\b/i,
       /\bsecurity deposit\b/i,
+      /\bsmall fee\b/i,
+      /\bpay(?:ment)? required\b/i,
     ],
     explanation:
       "Requests for fast or unusual payments are a common warning sign.",
@@ -50,6 +53,8 @@ export const SCAM_SIGNAL_RULES = [
       /\blogin details\b/i,
       /\bsecurity code\b/i,
       /\bconfirm your identity\b/i,
+      /\bauthorisation code\b/i,
+      /\bone[- ]?time password\b/i,
     ],
     explanation:
       "Real banks and services should not ask you to share passwords, PINs, or one-time codes by message.",
@@ -63,15 +68,116 @@ export const SCAM_SIGNAL_RULES = [
       /\bHMRC\b/i,
       /\bbank\b/i,
       /\bRoyal Mail\b/i,
+      /\bEvri\b/i,
+      /\bDPD\b/i,
       /\bpolice\b/i,
       /\bMicrosoft support\b/i,
       /\bAmazon\b/i,
       /\bPayPal\b/i,
       /\bDVLA\b/i,
       /\bNHS\b/i,
+      /\bTV Licensing\b/i,
+      /\bEE\b/i,
+      /\bO2\b/i,
     ],
     explanation:
       "Scammers often pretend to be trusted organisations.",
+  },
+  {
+    id: "parcel-redelivery-fee",
+    category: "Parcel scam",
+    label: "Parcel redelivery fee request",
+    weight: 22,
+    patterns: [
+      /\b(?:Royal Mail|Evri|DPD|parcel|delivery)\b.{0,80}\b(?:redelivery|re[- ]?delivery|reschedule|missed delivery)\b/i,
+      /\b(?:parcel|package)\b.{0,80}\b(?:fee|charge|customs|postage)\b/i,
+      /\b(?:pay|settle).{0,40}\b(?:parcel|delivery|redelivery)\b/i,
+    ],
+    explanation:
+      "Fake parcel redelivery fee messages are a common UK scam pattern.",
+  },
+  {
+    id: "hmrc-tax-refund",
+    category: "Tax refund scam",
+    label: "HMRC tax refund or rebate hook",
+    weight: 22,
+    patterns: [
+      /\bHMRC\b.{0,80}\b(?:refund|rebate|tax return|overpaid|claim)\b/i,
+      /\b(?:tax refund|tax rebate|refund pending|claim your refund)\b/i,
+    ],
+    explanation:
+      "Unexpected tax refund messages should be checked through the official HMRC website, not message links.",
+  },
+  {
+    id: "dvla-vehicle-scam",
+    category: "DVLA scam",
+    label: "DVLA vehicle tax or fine pressure",
+    weight: 18,
+    patterns: [
+      /\bDVLA\b.{0,80}\b(?:vehicle tax|road tax|fine|penalty|refund|licence|license)\b/i,
+      /\bvehicle tax\b.{0,80}\b(?:unpaid|overdue|fine|penalty)\b/i,
+    ],
+    explanation:
+      "DVLA-themed payment or penalty messages are often used to push people into unsafe links.",
+  },
+  {
+    id: "nhs-payment-scam",
+    category: "NHS scam",
+    label: "NHS appointment or payment request",
+    weight: 16,
+    patterns: [
+      /\bNHS\b.{0,80}\b(?:payment|fee|refund|appointment|prescription|booking)\b/i,
+      /\bmissed NHS appointment\b/i,
+    ],
+    explanation:
+      "Unexpected NHS payment or appointment messages should be verified through official NHS routes.",
+  },
+  {
+    id: "bank-otp-scam",
+    category: "Bank code scam",
+    label: "Bank verification code or OTP request",
+    weight: 24,
+    patterns: [
+      /\bbank\b.{0,80}\b(?:OTP|verification code|security code|PIN|password)\b/i,
+      /\b(?:OTP|verification code|security code)\b.{0,80}\b(?:reply|send|share|confirm)\b/i,
+      /\bapprove this transaction\b/i,
+    ],
+    explanation:
+      "Never share bank verification codes, OTPs, PINs, or passwords from a message.",
+  },
+  {
+    id: "remote-access-support",
+    category: "Remote access scam",
+    label: "Remote access or fake support request",
+    weight: 24,
+    patterns: [
+      /\bMicrosoft support\b/i,
+      /\bWindows support\b/i,
+      /\bremote access\b/i,
+      /\bAnyDesk\b/i,
+      /\bTeamViewer\b/i,
+      /\binstall.{0,40}(?:support|security|remote)\b/i,
+      /\byour computer has (?:a )?virus\b/i,
+    ],
+    explanation:
+      "Fake support scams often ask people to install remote access tools or believe their device is infected.",
+  },
+  {
+    id: "investment-crypto-pressure",
+    category: "Investment scam",
+    label: "Investment or crypto pressure",
+    weight: 20,
+    patterns: [
+      /\bguaranteed returns?\b/i,
+      /\bdouble your money\b/i,
+      /\brisk[- ]?free investment\b/i,
+      /\binvest now\b/i,
+      /\bcrypto wallet\b/i,
+      /\btrading platform\b/i,
+      /\bexclusive opportunity\b/i,
+    ],
+    explanation:
+      "Promises of guaranteed returns or pressure to invest quickly are common investment scam warning signs.",
   },
   {
     id: "emotional-manipulation",
@@ -94,7 +200,7 @@ export const SCAM_SIGNAL_RULES = [
     id: "family-new-number",
     category: "Family message",
     label: "Family-style new number money request",
-    weight: 20,
+    weight: 24,
     patterns: [
       /\bhi mum\b/i,
       /\bhi dad\b/i,
@@ -102,6 +208,7 @@ export const SCAM_SIGNAL_RULES = [
       /\blost my phone\b/i,
       /\bcan you pay\b/i,
       /\bplease transfer\b/i,
+      /\bWhatsApp\b.{0,60}\bnew number\b/i,
     ],
     explanation:
       "Scammers often pretend to be a family member using a new phone number and then ask for money.",
@@ -137,6 +244,7 @@ export const SCAM_SIGNAL_RULES = [
       /\bfine\b/i,
       /\bpenalty\b/i,
       /\bdebt collection\b/i,
+      /\bprosecution\b/i,
     ],
     explanation:
       "Threats are often used to rush people into unsafe actions.",
@@ -158,8 +266,11 @@ export const SHORTENED_URL_DOMAINS = new Set([
 ]);
 
 export const SUSPICIOUS_DOMAIN_HINTS = [
-  { pattern: /royal[-.]?mail[^/]*\.(?:top|xyz|click|info|shop)$/i, label: "Royal Mail lookalike domain" },
-  { pattern: /hmrc[^/]*\.(?:top|xyz|click|info|shop)$/i, label: "HMRC lookalike domain" },
-  { pattern: /paypa1|paypaI|royaI|micros0ft|arnazon/i, label: "Possible misspelling of a trusted brand" },
-  { pattern: /verify|secure|account|login|refund|parcel|rebate/i, label: "Domain uses scam-like action words" },
+  { pattern: /royal[-.]?mail[^/]*\.(?:top|xyz|click|info|shop|online|site)$/i, label: "Royal Mail lookalike domain" },
+  { pattern: /(?:evri|dpd|parcel|delivery)[^/]*\.(?:top|xyz|click|info|shop|online|site)$/i, label: "Parcel delivery lookalike domain" },
+  { pattern: /hmrc[^/]*\.(?:top|xyz|click|info|shop|online|site)$/i, label: "HMRC lookalike domain" },
+  { pattern: /dvla[^/]*\.(?:top|xyz|click|info|shop|online|site)$/i, label: "DVLA lookalike domain" },
+  { pattern: /nhs[^/]*\.(?:top|xyz|click|info|shop|online|site)$/i, label: "NHS lookalike domain" },
+  { pattern: /paypa1|paypaI|royaI|micros0ft|arnazon|barc1ays|natvvest|hsbcsecure/i, label: "Possible misspelling of a trusted brand" },
+  { pattern: /verify|secure|account|login|refund|parcel|rebate|redelivery|support|wallet/i, label: "Domain uses scam-like action words" },
 ];
