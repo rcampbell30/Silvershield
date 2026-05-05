@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silver Shield Family Safety Checklist</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #172033;
+        background: #eef5fb;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #eef5fb; }
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 32px 18px 56px;
+      }
+      .sheet {
+        background: #ffffff;
+        border: 1px solid #cbdff2;
+        border-radius: 24px;
+        box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+        padding: 34px;
+      }
+      .header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 18px;
+        align-items: center;
+        border-bottom: 3px solid #dbeafe;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+      }
+      .shield {
+        display: grid;
+        place-items: center;
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #dbeafe, #ffffff);
+        border: 3px solid #7aa7d9;
+        border-radius: 24px;
+        font-size: 38px;
+      }
+      h1 {
+        font-size: 42px;
+        line-height: 1.05;
+        margin: 0 0 8px;
+      }
+      p, li {
+        font-size: 22px;
+        line-height: 1.45;
+      }
+      .intro { color: #41516a; margin: 0; }
+      ul { list-style: none; padding: 0; margin: 0; }
+      li {
+        border: 2px solid #d7e8f8;
+        border-radius: 18px;
+        margin-bottom: 14px;
+        padding: 16px 18px;
+      }
+      li::before {
+        content: "□";
+        color: #1f5f99;
+        font-weight: 900;
+        margin-right: 12px;
+      }
+      .emergency {
+        background: #f7fbff;
+        border-left: 8px solid #2b6cb0;
+        border-radius: 18px;
+        margin-top: 26px;
+        padding: 18px 20px;
+      }
+      .emergency h2 { font-size: 28px; margin: 0 0 10px; }
+      .print-button {
+        min-height: 52px;
+        border: 0;
+        border-radius: 14px;
+        background: #1f5f99;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 900;
+        margin-bottom: 18px;
+        padding: 0 22px;
+      }
+      @media print {
+        body, main { background: #ffffff; padding: 0; }
+        .sheet { box-shadow: none; border: 0; border-radius: 0; }
+        .print-button { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <button class="print-button" type="button" onclick="window.print()">Print checklist</button>
+      <section class="sheet">
+        <header class="header">
+          <div class="shield" aria-hidden="true">🛡</div>
+          <div>
+            <h1>Family scam safety checklist</h1>
+            <p class="intro">Pause, check, and ask before sending money or sharing details.</p>
+          </div>
+        </header>
+
+        <ul>
+          <li>Never share verification codes, PINs, passwords, or one-time passcodes.</li>
+          <li>Never move money because of an urgent message, phone call, or pop-up.</li>
+          <li>Never pay parcel fees from a text-message link.</li>
+          <li>Call the bank using the number on the back of the card.</li>
+          <li>Contact HMRC, DVLA, NHS, or delivery companies through official websites only.</li>
+          <li>Do not install AnyDesk, TeamViewer, or remote access tools because a stranger told you to.</li>
+          <li>If a family member messages from a new number, call their old number or ask another family member.</li>
+          <li>If an offer promises guaranteed returns, pause and ask someone you trust.</li>
+          <li>Ask your trusted contact before sending money, buying gift cards, or paying fees.</li>
+        </ul>
+
+        <section class="emergency">
+          <h2>If something already happened</h2>
+          <p>Contact your bank immediately using the official number on your card or banking app. Keep screenshots and do not use phone numbers from the suspicious message.</p>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
