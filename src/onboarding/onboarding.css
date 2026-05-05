@@ -65,13 +65,33 @@ p, li, label { font-size: 17px; line-height: 1.55; }
   margin-bottom: 20px;
 }
 
-.step-card, .setup-card {
+.step-card, .setup-card, .pin-card {
   background: #ffffff;
   border: 1px solid #cbdff2;
   border-radius: 22px;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
   padding: 22px;
 }
+
+.pin-card {
+  align-items: start;
+  border-left: 7px solid #2b6cb0;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: auto 1fr;
+  margin-bottom: 20px;
+}
+.pin-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  background: #dbeafe;
+  border-radius: 18px;
+  font-size: 30px;
+}
+.pin-card ol { margin: 0 0 12px; padding-left: 24px; }
+.pin-card p { color: #41516a; margin-bottom: 0; }
 
 .step-card span {
   display: grid;
@@ -146,5 +166,5 @@ button[type="submit"] { background: #1f5f99; color: #ffffff; }
 #status { color: #11613b; font-weight: 900; margin: 14px 0 0; }
 
 @media (max-width: 760px) {
-  .hero, .step-grid, .form-grid { grid-template-columns: 1fr; }
+  .hero, .step-grid, .form-grid, .pin-card { grid-template-columns: 1fr; }
 }
