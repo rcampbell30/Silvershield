@@ -55,6 +55,15 @@ p, li { font-size: 17px; line-height: 1.55; }
   gap: 0 16px;
 }
 
+.domain-card {
+  background: #f7fbff;
+  border: 1px solid #d7e8f8;
+  border-radius: 16px;
+  margin-top: 20px;
+  padding: 18px;
+}
+.domain-card h2 { font-size: 21px; }
+
 label { display: block; font-size: 17px; font-weight: 800; margin: 18px 0 8px; }
 
 input[type="text"], select, textarea {
@@ -65,6 +74,7 @@ input[type="text"], select, textarea {
   line-height: 1.45;
   padding: 12px;
 }
+textarea { resize: vertical; }
 
 input:focus, select:focus, textarea:focus, button:focus-visible {
   outline: 3px solid #f7c948;
