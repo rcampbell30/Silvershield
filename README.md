@@ -8,6 +8,8 @@ This MVP is a Chrome/Edge-compatible Manifest V3 extension. It is intentionally 
 
 ## What this MVP does
 
+- Opens a family setup/onboarding page on first install.
+- Lets a family member record who is being protected and who the trusted contact is.
 - Provides a popup where someone can paste suspicious text, email content, SMS content, or a link.
 - Runs a deterministic local scam-risk analyser in the browser.
 - Returns one of three careful risk labels:
@@ -15,9 +17,10 @@ This MVP is a Chrome/Edge-compatible Manifest V3 extension. It is intentionally 
   - Be careful
   - High risk signs found
 - Shows plain-English reasons and next steps.
+- Suggests asking the saved trusted contact when high-risk signs are found.
 - Scans visible page text lightly with a content script.
 - Shows a non-intrusive warning banner when high-risk signs are found on a page.
-- Saves trusted contact settings locally.
+- Saves trusted contact and family setup settings locally.
 - Saves a small local history of recent checks using short previews only.
 - Uses `chrome.storage.local` for settings and history.
 
@@ -44,6 +47,10 @@ src/
   content/
     contentScript.ts
     warningBanner.ts
+  onboarding/
+    onboarding.html
+    onboarding.ts
+    onboarding.css
   popup/
     popup.html
     popup.ts
@@ -75,6 +82,26 @@ README.md
 
 PNG icons are generated into `dist/icons/` by `scripts/build.mjs`. Replace them with designed brand PNG files later if needed.
 
+## Family setup flow
+
+On first install, the background service worker opens `onboarding/onboarding.html`.
+
+The onboarding page asks for:
+
+- Person being protected.
+- Installer relationship.
+- Trusted contact name.
+- Trusted contact phone/email.
+- Warning sensitivity.
+- Whether page warning banners should be enabled.
+
+These values are saved locally in `chrome.storage.local`. There is no sending, syncing, account creation, or contact messaging in this MVP.
+
+The setup guide can also be reopened from:
+
+- The popup footer.
+- The options/settings page.
+
 ## Permissions model
 
 The extension requests only:
@@ -86,6 +113,8 @@ The extension requests only:
 It does **not** request `tabs`, `activeTab`, broad host permissions, or any network permission.
 
 The content script matches `http://*/*` and `https://*/*` so it can show scam-warning banners on ordinary web pages. This is broad page coverage, but the MVP keeps the behaviour local: page text is analysed in the browser and is not transmitted anywhere.
+
+The background worker may open the extension’s own onboarding page on fresh install. It does not read tab contents or browsing history.
 
 ## Install locally in Chrome or Edge
 
@@ -106,7 +135,7 @@ The content script matches `http://*/*` and `https://*/*` so it can show scam-wa
 
 5. Select the generated `dist` folder.
 
-6. Pin Silver Shield to the browser toolbar and open the popup.
+6. The onboarding page should open on first install. Pin Silver Shield to the browser toolbar and open the popup.
 
 ## Development commands
 
@@ -170,6 +199,7 @@ Silver Shield is local-only in this MVP.
 - Settings are stored in `chrome.storage.local`.
 - History stores only a timestamp, risk level, score, matched signal count, and a short preview of the checked text.
 - Full checked text is not stored by default.
+- Trusted contact details are stored locally only.
 
 Future AI checking would require explicit consent, clear privacy copy, and careful handling of sensitive content. Users should avoid pasting passwords, bank details, PINs, or verification codes.
 
@@ -193,7 +223,7 @@ Use careful wording:
 
 ### Phase 1
 
-Chrome/Edge desktop extension MVP.
+Chrome/Edge desktop extension MVP with onboarding and local trusted-contact setup.
 
 ### Phase 2
 
@@ -218,4 +248,4 @@ iPhone/iPad family setup flow.
 - Add a local blocklist/watchlist for suspicious domains.
 - Add better per-site banner dismissal so dismissing one page does not hide all future warnings.
 - Add accessibility testing with keyboard-only navigation and screen reader labels.
-- Add a small onboarding page for family-installed setup.
+- Add an exportable one-page family safety checklist.
