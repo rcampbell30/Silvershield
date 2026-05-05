@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Set up Silver Shield</title>
+    <link rel="stylesheet" href="./onboarding.css" />
+  </head>
+  <body>
+    <main class="onboarding-shell">
+      <header class="hero">
+        <div class="shield-mark" aria-hidden="true">🛡</div>
+        <div>
+          <p class="eyebrow">Family setup</p>
+          <h1>Set up Silver Shield for safer browsing</h1>
+          <p class="lead">Silver Shield gives calm scam warnings in the browser your family already uses. It checks locally in this MVP and does not send checked messages to a server.</p>
+        </div>
+      </header>
+
+      <section class="step-grid" aria-label="How Silver Shield helps">
+        <article class="step-card">
+          <span>1</span>
+          <h2>Check suspicious messages</h2>
+          <p>Paste an email, SMS, link, or message into the popup and get plain-English warning signs.</p>
+        </article>
+        <article class="step-card">
+          <span>2</span>
+          <h2>Warn on risky pages</h2>
+          <p>If a page has obvious scam-like language, Silver Shield can show a small warning banner.</p>
+        </article>
+        <article class="step-card">
+          <span>3</span>
+          <h2>Ask a trusted person</h2>
+          <p>Add a trusted contact so high-risk results can say who to ask before continuing.</p>
+        </article>
+      </section>
+
+      <form id="onboarding-form" class="setup-card">
+        <h2>Quick family setup</h2>
+        <p class="helper-text">These details are stored only in this browser. Silver Shield does not send messages to the trusted contact yet.</p>
+
+        <div class="form-grid">
+          <label>
+            Person being protected
+            <input id="protected-person-name" type="text" placeholder="Example: Mum" autocomplete="off" />
+          </label>
+
+          <label>
+            Your relationship
+            <input id="installer-relationship" type="text" placeholder="Example: Son, daughter, grandson" autocomplete="off" />
+          </label>
+
+          <label>
+            Trusted contact name
+            <input id="trusted-contact-name" type="text" placeholder="Example: Sarah" autocomplete="name" />
+          </label>
+
+          <label>
+            Trusted contact phone or email
+            <input id="trusted-contact-contact" type="text" placeholder="Example: 07123 456789 or sarah@example.com" autocomplete="email" />
+          </label>
+        </div>
+
+        <label for="sensitivity">Warning sensitivity</label>
+        <select id="sensitivity">
+          <option value="low">Low — fewer warnings</option>
+          <option value="normal">Normal — recommended</option>
+          <option value="high">High — most cautious</option>
+        </select>
+
+        <label class="toggle-row" for="warning-banners">
+          <input id="warning-banners" type="checkbox" />
+          Show warning banners on high-risk pages
+        </label>
+
+        <div class="privacy-box">
+          <strong>Privacy promise for this MVP</strong>
+          <ul>
+            <li>Checks run locally in this browser.</li>
+            <li>Checked messages are not sent to a server.</li>
+            <li>History stores short previews only, not full messages.</li>
+            <li>Silver Shield can make mistakes, so serious concerns should be checked directly.</li>
+          </ul>
+        </div>
+
+        <div class="button-row">
+          <button type="submit">Finish setup</button>
+          <button id="skip-button" type="button" class="secondary-button">Skip for now</button>
+        </div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+    <script type="module" src="./onboarding.js"></script>
+  </body>
+</html>
