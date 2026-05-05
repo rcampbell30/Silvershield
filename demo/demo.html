@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silver Shield Demo Messages</title>
+    <link rel="stylesheet" href="./demo.css" />
+  </head>
+  <body>
+    <main class="demo-shell">
+      <header class="hero">
+        <div class="shield-mark" aria-hidden="true">🛡</div>
+        <div>
+          <p class="eyebrow">Local demo content</p>
+          <h1>Silver Shield scam-check demo</h1>
+          <p>This page contains fake example messages for testing the extension popup. These are not real alerts, links, or offers.</p>
+        </div>
+      </header>
+
+      <section class="notice">
+        <strong>How to use:</strong> click “Copy example”, open the Silver Shield popup, paste the text, then run “Check for scam signs”.
+      </section>
+
+      <section class="examples" aria-label="Demo scam examples">
+        <article class="example-card high-risk">
+          <h2>Fake Royal Mail parcel fee</h2>
+          <p class="tag">Expected: high risk</p>
+          <pre>Royal Mail: Your parcel is waiting. Pay a small redelivery fee within 24 hours to avoid return: http://royal-mail-fee.top/claim</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+
+        <article class="example-card high-risk">
+          <h2>Fake HMRC tax refund</h2>
+          <p class="tag">Expected: high risk</p>
+          <pre>HMRC: You have a tax rebate waiting. Claim your refund pending now and confirm your identity at https://hmrc-refund.click/login</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+
+        <article class="example-card high-risk">
+          <h2>Fake bank verification code request</h2>
+          <p class="tag">Expected: high risk</p>
+          <pre>Urgent: your bank account will be blocked. Reply immediately with your password, PIN and verification code to approve this transaction.</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+
+        <article class="example-card high-risk">
+          <h2>Fake WhatsApp family message</h2>
+          <p class="tag">Expected: high risk</p>
+          <pre>Hi mum I lost my phone, this is my new number. I need help urgently, please transfer £980 today and don't tell anyone.</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+
+        <article class="example-card high-risk">
+          <h2>Fake Microsoft support remote access</h2>
+          <p class="tag">Expected: high risk</p>
+          <pre>Microsoft support: your computer has a virus. Install AnyDesk now so our engineer can get remote access and secure your account.</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+
+        <article class="example-card caution">
+          <h2>Fake crypto investment pressure</h2>
+          <p class="tag">Expected: caution/high depending sensitivity</p>
+          <pre>Exclusive opportunity: invest now in our crypto wallet platform for guaranteed returns. Limited time offer, double your money this week.</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+
+        <article class="example-card safe">
+          <h2>Normal harmless message</h2>
+          <p class="tag">Expected: likely safe</p>
+          <pre>Hi, just checking we are still meeting for lunch at 1pm tomorrow. I will bring the book you asked for.</pre>
+          <button type="button" data-copy>Copy example</button>
+        </article>
+      </section>
+
+      <p id="copy-status" role="status" aria-live="polite"></p>
+    </main>
+    <script src="./demo.js"></script>
+  </body>
+</html>
