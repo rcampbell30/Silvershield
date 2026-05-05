@@ -40,10 +40,10 @@ h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 2px; font-size: 25px; line-height: 1.1; }
 h2 { margin-bottom: 8px; font-size: 17px; }
 
-.brand-header p, .footer-actions p, .privacy-note { line-height: 1.4; }
+.brand-header p, .footer-actions p, .privacy-note, .family-card { line-height: 1.4; }
 .brand-header p { margin-bottom: 0; color: #41516a; font-size: 14px; }
 
-.privacy-note, .checker-card, .result-card, .history-card {
+.privacy-note, .checker-card, .result-card, .history-card, .family-card {
   background: #ffffff;
   border: 1px solid #cbdff2;
   border-radius: 16px;
@@ -52,6 +52,13 @@ h2 { margin-bottom: 8px; font-size: 17px; }
   padding: 14px;
 }
 
+.family-card {
+  background: #f7fbff;
+  border-left: 5px solid #7aa7d9;
+  font-size: 14px;
+}
+.family-card strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.family-card p { color: #41516a; margin-bottom: 0; }
 .privacy-note { border-left: 5px solid #2b6cb0; font-size: 14px; }
 label { display: block; margin-bottom: 8px; font-size: 16px; font-weight: 700; }
 
