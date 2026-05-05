@@ -52,6 +52,19 @@
           Show warning banners on high-risk pages
         </label>
 
+        <section class="domain-card" aria-label="Trusted and blocked domains">
+          <h2>Website lists</h2>
+          <p class="helper-text">Use one domain per line. Trusted sites reduce page-warning noise; blocked sites raise risk. Trusted never means guaranteed safe.</p>
+
+          <label for="trusted-domains">Trusted domains</label>
+          <textarea id="trusted-domains" rows="5" placeholder="gov.uk&#10;nhs.uk&#10;royalmail.com"></textarea>
+
+          <label for="blocked-domains">Blocked domains</label>
+          <textarea id="blocked-domains" rows="5" placeholder="example-scam-site.top&#10;fake-refund-click.xyz"></textarea>
+
+          <button id="clear-dismissed-sites" type="button" class="secondary-button">Reset “don’t warn on this site” choices</button>
+        </section>
+
         <label for="emergency-help">Emergency help text</label>
         <textarea id="emergency-help" rows="5"></textarea>
 
