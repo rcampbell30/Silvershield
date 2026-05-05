@@ -1,4 +1,4 @@
-import { analyseScamRisk } from "../shared/riskScoring.js";
+import { analyseScamRisk, shouldSuppressPageWarning } from "../shared/riskScoring.js";
 import { getSettings } from "../shared/storage.js";
 import { showWarningBanner } from "./warningBanner.js";
 
@@ -12,13 +12,14 @@ main().catch(() => {
 async function main() {
   const settings = await getSettings();
   if (!settings.warningBannersEnabled) return;
+  if (shouldSuppressPageWarning(location.hostname, settings)) return;
 
   const pageText = getVisiblePageText();
   const checkedText = `${location.href}\n\n${pageText}`;
   const analysis = analyseScamRisk(checkedText, settings);
 
   if (analysis.riskLevel === "high") {
-    showWarningBanner(analysis);
+    showWarningBanner(analysis, { hostname: location.hostname });
   }
 }
 
