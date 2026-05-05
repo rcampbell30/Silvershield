@@ -1,0 +1,165 @@
+export const SCAM_SIGNAL_RULES = [
+  {
+    id: "urgency-act-now",
+    category: "Urgency",
+    label: "Urgent pressure to act quickly",
+    weight: 12,
+    patterns: [
+      /\bact now\b/i,
+      /\burgent\b/i,
+      /\bimmediately\b/i,
+      /\blimited time\b/i,
+      /\bwithin 24 hours\b/i,
+      /\bexpires? today\b/i,
+      /\bfinal warning\b/i,
+    ],
+    explanation:
+      "Scams often create time pressure so people act before checking properly.",
+  },
+  {
+    id: "money-pressure",
+    category: "Money pressure",
+    label: "Pressure to send money or unusual payment",
+    weight: 18,
+    patterns: [
+      /\bsend money\b/i,
+      /\bbank transfer\b/i,
+      /\bwire transfer\b/i,
+      /\bgift cards?\b/i,
+      /\bcrypto(?:currency)?\b/i,
+      /\bbitcoin\b/i,
+      /\brefund fee\b/i,
+      /\badmin fee\b/i,
+      /\bprocessing fee\b/i,
+      /\bsecurity deposit\b/i,
+    ],
+    explanation:
+      "Requests for fast or unusual payments are a common warning sign.",
+  },
+  {
+    id: "credential-request",
+    category: "Personal details",
+    label: "Asks for passwords, PINs, or verification codes",
+    weight: 22,
+    patterns: [
+      /\bpassword\b/i,
+      /\bverification code\b/i,
+      /\bone[- ]?time code\b/i,
+      /\bOTP\b/i,
+      /\bPIN\b/i,
+      /\blogin details\b/i,
+      /\bsecurity code\b/i,
+      /\bconfirm your identity\b/i,
+    ],
+    explanation:
+      "Real banks and services should not ask you to share passwords, PINs, or one-time codes by message.",
+  },
+  {
+    id: "impersonation-known-org",
+    category: "Impersonation",
+    label: "Mentions a commonly impersonated organisation",
+    weight: 10,
+    patterns: [
+      /\bHMRC\b/i,
+      /\bbank\b/i,
+      /\bRoyal Mail\b/i,
+      /\bpolice\b/i,
+      /\bMicrosoft support\b/i,
+      /\bAmazon\b/i,
+      /\bPayPal\b/i,
+      /\bDVLA\b/i,
+      /\bNHS\b/i,
+    ],
+    explanation:
+      "Scammers often pretend to be trusted organisations.",
+  },
+  {
+    id: "emotional-manipulation",
+    category: "Emotional pressure",
+    label: "Emotional pressure or secrecy",
+    weight: 18,
+    patterns: [
+      /\bfamily emergency\b/i,
+      /\bI lost my phone\b/i,
+      /\bnew number\b/i,
+      /\bdon'?t tell anyone\b/i,
+      /\bkeep this secret\b/i,
+      /\bplease help me\b/i,
+      /\bI need help urgently\b/i,
+    ],
+    explanation:
+      "Messages that mix urgency, secrecy, and family pressure should be checked carefully.",
+  },
+  {
+    id: "family-new-number",
+    category: "Family message",
+    label: "Family-style new number money request",
+    weight: 20,
+    patterns: [
+      /\bhi mum\b/i,
+      /\bhi dad\b/i,
+      /\bnew number\b/i,
+      /\blost my phone\b/i,
+      /\bcan you pay\b/i,
+      /\bplease transfer\b/i,
+    ],
+    explanation:
+      "Scammers often pretend to be a family member using a new phone number and then ask for money.",
+  },
+  {
+    id: "prize-refund-hook",
+    category: "Prize or refund hook",
+    label: "Prize, refund, parcel fee, or tax rebate hook",
+    weight: 16,
+    patterns: [
+      /\byou won\b/i,
+      /\bwinner\b/i,
+      /\brefund pending\b/i,
+      /\bparcel fee\b/i,
+      /\bdelivery fee\b/i,
+      /\btax rebate\b/i,
+      /\btax refund\b/i,
+      /\bclaim your refund\b/i,
+      /\bclaim now\b/i,
+    ],
+    explanation:
+      "Prize, refund, delivery-fee, and rebate messages are common scam hooks.",
+  },
+  {
+    id: "threat-or-penalty",
+    category: "Threat",
+    label: "Threat of penalty, arrest, closure, or blocked access",
+    weight: 15,
+    patterns: [
+      /\baccount (?:will be )?(?:closed|blocked|suspended|locked)\b/i,
+      /\blegal action\b/i,
+      /\barrest\b/i,
+      /\bfine\b/i,
+      /\bpenalty\b/i,
+      /\bdebt collection\b/i,
+    ],
+    explanation:
+      "Threats are often used to rush people into unsafe actions.",
+  },
+];
+
+export const SHORTENED_URL_DOMAINS = new Set([
+  "bit.ly",
+  "tinyurl.com",
+  "t.co",
+  "goo.gl",
+  "ow.ly",
+  "is.gd",
+  "buff.ly",
+  "cutt.ly",
+  "shorturl.at",
+  "rebrand.ly",
+  "lnkd.in",
+]);
+
+export const SUSPICIOUS_DOMAIN_HINTS = [
+  { pattern: /royal[-.]?mail[^/]*\.(?:top|xyz|click|info|shop)$/i, label: "Royal Mail lookalike domain" },
+  { pattern: /hmrc[^/]*\.(?:top|xyz|click|info|shop)$/i, label: "HMRC lookalike domain" },
+  { pattern: /paypa1|paypaI|royaI|micros0ft|arnazon/i, label: "Possible misspelling of a trusted brand" },
+  { pattern: /verify|secure|account|login|refund|parcel|rebate/i, label: "Domain uses scam-like action words" },
+];
