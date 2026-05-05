@@ -1,0 +1,20 @@
+{
+  "name": "silver-shield-extension",
+  "version": "0.1.0",
+  "description": "Browser-extension-first scam protection MVP for Chrome and Edge.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test:rules": "npm run build && node scripts/testRules.mjs"
+  },
+  "keywords": [
+    "browser-extension",
+    "manifest-v3",
+    "scam-protection",
+    "chrome-extension",
+    "edge-extension"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {}
+}
