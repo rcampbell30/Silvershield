@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silver Shield</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="brand-header">
+        <div class="shield-mark" aria-hidden="true">🛡</div>
+        <div>
+          <h1>Silver Shield</h1>
+          <p>Scam warnings for the browser your family already uses.</p>
+        </div>
+      </header>
+
+      <section class="privacy-note" aria-label="Privacy note">
+        <strong>Local check in this MVP.</strong>
+        Your checked messages are not sent to a server. Avoid pasting passwords, bank details, or verification codes.
+      </section>
+
+      <section class="checker-card">
+        <label for="scam-input">Paste a suspicious message, email, SMS, or link</label>
+        <textarea id="scam-input" rows="8" placeholder="Example: Royal Mail: your parcel is waiting. Pay a small delivery fee now..."></textarea>
+        <button id="check-button" type="button">Check for scam signs</button>
+      </section>
+
+      <section id="result-card" class="result-card" hidden aria-live="polite">
+        <div class="result-heading">
+          <span id="result-badge" class="result-badge">Likely safe</span>
+          <span id="result-score" class="result-score">0/100</span>
+        </div>
+        <p id="result-explanation"></p>
+
+        <div id="signals-wrap" class="signals-wrap" hidden>
+          <h2>Warning signs found</h2>
+          <ul id="signals-list"></ul>
+        </div>
+
+        <div class="actions-wrap">
+          <h2>Next steps</h2>
+          <ul id="actions-list"></ul>
+        </div>
+      </section>
+
+      <section class="history-card">
+        <div class="section-heading">
+          <h2>Recent checks</h2>
+          <button id="clear-history" type="button" class="link-button">Clear history</button>
+        </div>
+        <ul id="history-list" class="history-list"></ul>
+      </section>
+
+      <footer class="footer-actions">
+        <button id="options-button" type="button" class="secondary-button">Settings</button>
+        <p>Silver Shield can make mistakes. When in doubt, ask someone you trust or contact the organisation directly.</p>
+      </footer>
+    </main>
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>
