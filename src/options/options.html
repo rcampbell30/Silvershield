@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silver Shield Settings</title>
+    <link rel="stylesheet" href="./options.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header class="page-header">
+        <div class="shield-mark" aria-hidden="true">🛡</div>
+        <div>
+          <h1>Silver Shield settings</h1>
+          <p>Set up local family support and warning preferences.</p>
+        </div>
+      </header>
+
+      <section class="card privacy-card">
+        <h2>Privacy first</h2>
+        <p>Silver Shield checks messages locally in your browser in this MVP. Your checked messages are not sent to a server. Avoid pasting passwords, bank details, or verification codes.</p>
+      </section>
+
+      <form id="settings-form" class="card">
+        <h2>Trusted contact</h2>
+        <p class="helper-text">This is stored only on this browser. Silver Shield does not send messages to this person yet.</p>
+
+        <label for="trusted-name">Trusted contact name</label>
+        <input id="trusted-name" type="text" autocomplete="name" placeholder="Example: Sarah" />
+
+        <label for="trusted-contact">Trusted contact phone or email</label>
+        <input id="trusted-contact" type="text" autocomplete="email" placeholder="Example: sarah@example.com or 07123 456789" />
+
+        <label for="sensitivity">Warning sensitivity</label>
+        <select id="sensitivity">
+          <option value="low">Low — fewer banners</option>
+          <option value="normal">Normal — recommended</option>
+          <option value="high">High — more cautious</option>
+        </select>
+
+        <label class="toggle-row" for="warning-banners">
+          <input id="warning-banners" type="checkbox" />
+          Show warning banners on high-risk pages
+        </label>
+
+        <label for="emergency-help">Emergency help text</label>
+        <textarea id="emergency-help" rows="5"></textarea>
+
+        <button type="submit">Save settings</button>
+        <p id="save-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <section class="card">
+        <h2>Emergency guidance</h2>
+        <ul>
+          <li>If money was sent, contact your bank immediately using the number on the back of your card.</li>
+          <li>If login details were shared, change the password from the official website or app.</li>
+          <li>If a verification code was shared, contact the service directly and tell them what happened.</li>
+          <li>In the UK, scams and fraud can be reported to Action Fraud.</li>
+        </ul>
+      </section>
+    </main>
+    <script type="module" src="./options.js"></script>
+  </body>
+</html>
