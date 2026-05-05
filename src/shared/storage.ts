@@ -11,6 +11,11 @@ export async function saveSettings(settings) {
   return normalized;
 }
 
+export async function markOnboardingCompleted() {
+  const settings = await getSettings();
+  return saveSettings({ ...settings, onboardingCompleted: true });
+}
+
 export async function getHistory() {
   const result = await chrome.storage.local.get(STORAGE_KEYS.history);
   return Array.isArray(result[STORAGE_KEYS.history]) ? result[STORAGE_KEYS.history] : [];
@@ -40,6 +45,15 @@ export function normalizeSettings(settings = {}) {
   return {
     ...DEFAULT_SETTINGS,
     ...settings,
+    trustedContactName: String(settings.trustedContactName || DEFAULT_SETTINGS.trustedContactName),
+    trustedContactContact: String(settings.trustedContactContact || DEFAULT_SETTINGS.trustedContactContact),
+    protectedPersonName: String(settings.protectedPersonName || DEFAULT_SETTINGS.protectedPersonName),
+    installerRelationship: String(settings.installerRelationship || DEFAULT_SETTINGS.installerRelationship),
+    emergencyHelpText: String(settings.emergencyHelpText || DEFAULT_SETTINGS.emergencyHelpText),
+    onboardingCompleted:
+      typeof settings.onboardingCompleted === "boolean"
+        ? settings.onboardingCompleted
+        : DEFAULT_SETTINGS.onboardingCompleted,
     sensitivity: ["low", "normal", "high"].includes(settings.sensitivity) ? settings.sensitivity : DEFAULT_SETTINGS.sensitivity,
     warningBannersEnabled:
       typeof settings.warningBannersEnabled === "boolean"
