@@ -14,13 +14,23 @@ const actionsList = document.getElementById("actions-list");
 const historyList = document.getElementById("history-list");
 const clearHistoryButton = document.getElementById("clear-history");
 const optionsButton = document.getElementById("options-button");
+const setupButton = document.getElementById("setup-button");
+const familyCard = document.getElementById("family-card");
+const familyTitle = document.getElementById("family-title");
+const familyCopy = document.getElementById("family-copy");
 
 checkButton.addEventListener("click", handleCheck);
 clearHistoryButton.addEventListener("click", handleClearHistory);
 optionsButton.addEventListener("click", () => chrome.runtime.openOptionsPage());
+setupButton.addEventListener("click", openOnboarding);
 
-document.addEventListener("DOMContentLoaded", renderHistory);
-renderHistory();
+document.addEventListener("DOMContentLoaded", initializePopup);
+initializePopup();
+
+async function initializePopup() {
+  await renderFamilySetup();
+  await renderHistory();
+}
 
 async function handleCheck() {
   const value = input.value.trim();
@@ -32,6 +42,23 @@ async function handleCheck() {
     await addHistoryItem(value, analysis);
     await renderHistory();
   }
+}
+
+async function renderFamilySetup() {
+  const settings = await getSettings();
+  const protectedName = settings.protectedPersonName?.trim();
+  const trustedName = settings.trustedContactName?.trim();
+
+  if (!protectedName && !trustedName) {
+    familyCard.hidden = true;
+    return;
+  }
+
+  familyCard.hidden = false;
+  familyTitle.textContent = protectedName ? `Protecting ${protectedName}` : "Family setup active";
+  familyCopy.textContent = trustedName
+    ? `High-risk checks will suggest asking ${trustedName} before continuing.`
+    : "Add a trusted contact so high-risk checks can suggest who to ask before continuing.";
 }
 
 function renderResult(analysis) {
@@ -84,6 +111,14 @@ async function renderHistory() {
 async function handleClearHistory() {
   await clearHistory();
   await renderHistory();
+}
+
+function openOnboarding() {
+  chrome.runtime.sendMessage({ type: "OPEN_ONBOARDING" }, () => {
+    if (chrome.runtime.lastError) {
+      window.location.href = chrome.runtime.getURL("onboarding/onboarding.html");
+    }
+  });
 }
 
 function escapeHtml(value) {
