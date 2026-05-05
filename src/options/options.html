@@ -19,17 +19,26 @@
       <section class="card privacy-card">
         <h2>Privacy first</h2>
         <p>Silver Shield checks messages locally in your browser in this MVP. Your checked messages are not sent to a server. Avoid pasting passwords, bank details, or verification codes.</p>
+        <button id="open-onboarding" type="button" class="secondary-button">Open family setup guide</button>
       </section>
 
       <form id="settings-form" class="card">
-        <h2>Trusted contact</h2>
-        <p class="helper-text">This is stored only on this browser. Silver Shield does not send messages to this person yet.</p>
+        <h2>Family setup</h2>
+        <p class="helper-text">These details are stored only on this browser. Silver Shield does not send messages to this person yet.</p>
 
-        <label for="trusted-name">Trusted contact name</label>
-        <input id="trusted-name" type="text" autocomplete="name" placeholder="Example: Sarah" />
+        <div class="form-grid">
+          <label for="protected-person-name">Person being protected</label>
+          <input id="protected-person-name" type="text" autocomplete="off" placeholder="Example: Mum" />
 
-        <label for="trusted-contact">Trusted contact phone or email</label>
-        <input id="trusted-contact" type="text" autocomplete="email" placeholder="Example: sarah@example.com or 07123 456789" />
+          <label for="installer-relationship">Your relationship</label>
+          <input id="installer-relationship" type="text" autocomplete="off" placeholder="Example: Son, daughter, grandson" />
+
+          <label for="trusted-name">Trusted contact name</label>
+          <input id="trusted-name" type="text" autocomplete="name" placeholder="Example: Sarah" />
+
+          <label for="trusted-contact">Trusted contact phone or email</label>
+          <input id="trusted-contact" type="text" autocomplete="email" placeholder="Example: sarah@example.com or 07123 456789" />
+        </div>
 
         <label for="sensitivity">Warning sensitivity</label>
         <select id="sensitivity">
