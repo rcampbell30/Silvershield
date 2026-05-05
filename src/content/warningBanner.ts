@@ -1,8 +1,11 @@
+import { dismissSiteWarnings } from "../shared/storage.js";
+
 const BANNER_ID = "silver-shield-warning-banner";
 
-export function showWarningBanner(analysis) {
+export function showWarningBanner(analysis, context = {}) {
   if (document.getElementById(BANNER_ID)) return;
 
+  const hostname = context.hostname || location.hostname;
   const banner = document.createElement("section");
   banner.id = BANNER_ID;
   banner.setAttribute("role", "status");
@@ -18,7 +21,8 @@ export function showWarningBanner(analysis) {
       <div class="ssb-actions">
         <button type="button" data-action="why">Why?</button>
         <button type="button" data-action="open">Open Silver Shield</button>
-        <button type="button" data-action="dismiss">Dismiss</button>
+        <button type="button" data-action="dismiss-once">Dismiss once</button>
+        <button type="button" data-action="dismiss-site">Don’t warn on this site</button>
       </div>
     </div>
   `;
@@ -36,7 +40,7 @@ export function showWarningBanner(analysis) {
       pointer-events: none;
     }
     #${BANNER_ID} .ssb-shell {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: auto 1fr auto;
@@ -94,6 +98,10 @@ export function showWarningBanner(analysis) {
       background: #2b6cb0;
       color: #ffffff;
     }
+    #${BANNER_ID} button[data-action="dismiss-site"] {
+      border-color: #8aa0b8;
+      color: #334155;
+    }
     @media (max-width: 720px) {
       #${BANNER_ID} .ssb-shell {
         grid-template-columns: 1fr;
@@ -108,12 +116,17 @@ export function showWarningBanner(analysis) {
   document.documentElement.appendChild(banner);
 
   const whyCopy = banner.querySelector(".ssb-why");
-  banner.addEventListener("click", (event) => {
+  banner.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
 
     const action = button.dataset.action;
-    if (action === "dismiss") {
+    if (action === "dismiss-once") {
+      banner.remove();
+    }
+
+    if (action === "dismiss-site") {
+      await dismissSiteWarnings(hostname);
       banner.remove();
     }
 
@@ -137,6 +150,9 @@ function getWhyText(analysis) {
     return "Silver Shield noticed a high overall risk score, but could not show a specific reason here.";
   }
 
-  const reasons = analysis.matchedSignals.slice(0, 4).map((signal) => signal.label);
+  const reasons = analysis.matchedSignals
+    .filter((signal) => signal.category !== "Trusted site")
+    .slice(0, 4)
+    .map((signal) => signal.label);
   return `Reasons found: ${reasons.join(", ")}. Silver Shield can make mistakes, so verify using a trusted route.`;
 }
