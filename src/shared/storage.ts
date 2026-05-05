@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS, HISTORY_PREVIEW_LENGTH, MAX_HISTORY_ITEMS, STORAGE_KEYS } from "./constants.js";
+import { DEFAULT_SETTINGS, HISTORY_PREVIEW_LENGTH, MAX_DOMAIN_LIST_ITEMS, MAX_HISTORY_ITEMS, STORAGE_KEYS } from "./constants.js";
 
 export async function getSettings() {
   const result = await chrome.storage.local.get(STORAGE_KEYS.settings);
@@ -14,6 +14,22 @@ export async function saveSettings(settings) {
 export async function markOnboardingCompleted() {
   const settings = await getSettings();
   return saveSettings({ ...settings, onboardingCompleted: true });
+}
+
+export async function dismissSiteWarnings(hostname) {
+  const settings = await getSettings();
+  const domain = normalizeDomain(hostname);
+  if (!domain) return settings;
+
+  return saveSettings({
+    ...settings,
+    dismissedWarningSites: uniqueDomainList([domain, ...settings.dismissedWarningSites]),
+  });
+}
+
+export async function clearDismissedWarningSites() {
+  const settings = await getSettings();
+  return saveSettings({ ...settings, dismissedWarningSites: [] });
 }
 
 export async function getHistory() {
@@ -50,6 +66,9 @@ export function normalizeSettings(settings = {}) {
     protectedPersonName: String(settings.protectedPersonName || DEFAULT_SETTINGS.protectedPersonName),
     installerRelationship: String(settings.installerRelationship || DEFAULT_SETTINGS.installerRelationship),
     emergencyHelpText: String(settings.emergencyHelpText || DEFAULT_SETTINGS.emergencyHelpText),
+    trustedDomains: normalizeDomainList(settings.trustedDomains),
+    blockedDomains: normalizeDomainList(settings.blockedDomains),
+    dismissedWarningSites: normalizeDomainList(settings.dismissedWarningSites),
     onboardingCompleted:
       typeof settings.onboardingCompleted === "boolean"
         ? settings.onboardingCompleted
@@ -60,6 +79,37 @@ export function normalizeSettings(settings = {}) {
         ? settings.warningBannersEnabled
         : DEFAULT_SETTINGS.warningBannersEnabled,
   };
+}
+
+export function normalizeDomainList(value) {
+  if (Array.isArray(value)) return uniqueDomainList(value);
+  if (typeof value === "string") return uniqueDomainList(value.split(/[\n,]/));
+  return [];
+}
+
+export function uniqueDomainList(domains) {
+  return Array.from(new Set(domains.map(normalizeDomain).filter(Boolean))).slice(0, MAX_DOMAIN_LIST_ITEMS);
+}
+
+export function normalizeDomain(value) {
+  const trimmed = String(value || "").trim().toLowerCase();
+  if (!trimmed) return "";
+
+  try {
+    const url = new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+    return url.hostname.replace(/^www\./, "");
+  } catch {
+    return trimmed
+      .replace(/^https?:\/\//, "")
+      .replace(/^www\./, "")
+      .split("/")[0]
+      .replace(/[^a-z0-9.-]/g, "");
+  }
+}
+
+export function domainMatches(hostname, domainList = []) {
+  const normalized = normalizeDomain(hostname);
+  return domainList.some((domain) => normalized === domain || normalized.endsWith(`.${domain}`));
 }
 
 export function makePreview(input) {
