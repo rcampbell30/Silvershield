@@ -10,7 +10,7 @@ body { margin: 0; background: #eef5fb; }
 button, input, select, textarea { font: inherit; }
 
 .settings-shell {
-  max-width: 840px;
+  max-width: 880px;
   margin: 0 auto;
   padding: 28px 18px 48px;
 }
@@ -49,6 +49,12 @@ p, li { font-size: 17px; line-height: 1.55; }
 }
 
 .privacy-card { border-left: 6px solid #2b6cb0; }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 16px;
+}
+
 label { display: block; font-size: 17px; font-weight: 800; margin: 18px 0 8px; }
 
 input[type="text"], select, textarea {
@@ -68,21 +74,26 @@ input:focus, select:focus, textarea:focus, button:focus-visible {
 .toggle-row { display: flex; align-items: center; gap: 10px; }
 .toggle-row input { width: 22px; height: 22px; }
 
-button[type="submit"] {
+button[type="submit"], .secondary-button {
   min-height: 50px;
   border: 0;
   border-radius: 12px;
-  background: #1f5f99;
-  color: #ffffff;
   cursor: pointer;
   font-size: 17px;
   font-weight: 800;
   margin-top: 18px;
   padding: 0 22px;
 }
+button[type="submit"] { background: #1f5f99; color: #ffffff; }
+.secondary-button { background: #e5effa; color: #12385f; }
 
 #save-status {
   color: #11613b;
   font-weight: 800;
   margin: 12px 0 0;
+}
+
+@media (max-width: 720px) {
+  .page-header, .form-grid { grid-template-columns: 1fr; }
+  .form-grid { display: block; }
 }
