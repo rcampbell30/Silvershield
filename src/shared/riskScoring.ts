@@ -1,11 +1,17 @@
 import { DEFAULT_ACTIONS } from "./constants.js";
 import { SCAM_SIGNAL_RULES, SHORTENED_URL_DOMAINS, SUSPICIOUS_DOMAIN_HINTS } from "./scamRules.js";
+import { domainMatches, normalizeDomainList } from "./storage.js";
 
 const URL_PATTERN = /\b(?:https?:\/\/|www\.)[^\s<>()"']+|\b[a-z0-9.-]+\.(?:com|co\.uk|org|net|info|top|xyz|click|shop|uk|online|site)(?:\/[^\s<>()"']*)?/gi;
 
 export function analyseScamRisk(input, settings = {}) {
   const text = String(input || "").trim();
   const matchedSignals = [];
+  const normalizedSettings = {
+    ...settings,
+    trustedDomains: normalizeDomainList(settings.trustedDomains),
+    blockedDomains: normalizeDomainList(settings.blockedDomains),
+  };
 
   if (!text) {
     return {
@@ -31,19 +37,20 @@ export function analyseScamRisk(input, settings = {}) {
     }
   }
 
-  matchedSignals.push(...detectSuspiciousUrls(text));
+  matchedSignals.push(...detectSuspiciousUrls(text, normalizedSettings));
 
   const rawScore = matchedSignals.reduce((sum, signal) => sum + signal.weight, 0);
   const comboBonus = getCombinationBonus(matchedSignals);
-  const score = Math.min(100, rawScore + comboBonus);
-  const riskLevel = getRiskLevel(score, settings.sensitivity || "normal");
+  const trustedDomainAdjustment = getTrustedDomainAdjustment(text, matchedSignals, normalizedSettings);
+  const score = Math.max(0, Math.min(100, rawScore + comboBonus + trustedDomainAdjustment));
+  const riskLevel = getRiskLevel(score, normalizedSettings.sensitivity || "normal");
 
   return {
     riskLevel,
     score,
     matchedSignals,
-    explanation: buildExplanation(riskLevel, matchedSignals),
-    recommendedActions: buildRecommendedActions(riskLevel, settings),
+    explanation: buildExplanation(riskLevel, matchedSignals, trustedDomainAdjustment),
+    recommendedActions: buildRecommendedActions(riskLevel, normalizedSettings),
   };
 }
 
@@ -53,10 +60,12 @@ export function extractUrls(input) {
   return Array.from(String(input || "").matchAll(URL_PATTERN)).map((match) => cleanUrl(match[0]));
 }
 
-export function detectSuspiciousUrls(input) {
+export function detectSuspiciousUrls(input, settings = {}) {
   const urls = extractUrls(input);
   const signals = [];
   const seen = new Set();
+  const trustedDomains = normalizeDomainList(settings.trustedDomains);
+  const blockedDomains = normalizeDomainList(settings.blockedDomains);
 
   for (const rawUrl of urls) {
     const url = toUrl(rawUrl);
@@ -72,6 +81,28 @@ export function detectSuspiciousUrls(input) {
       weight: 4,
       explanation: "Links in unexpected messages should be checked before clicking.",
     });
+
+    if (domainMatches(hostname, blockedDomains)) {
+      addSignalOnce(signals, seen, {
+        id: `url-blocked-domain-${hostname}`,
+        category: "Blocked site",
+        label: "Link matches your blocked sites list",
+        evidence: hostname,
+        weight: 42,
+        explanation: "This domain is on your local blocked list.",
+      });
+    }
+
+    if (domainMatches(hostname, trustedDomains)) {
+      addSignalOnce(signals, seen, {
+        id: `url-trusted-domain-${hostname}`,
+        category: "Trusted site",
+        label: "Link matches your trusted sites list",
+        evidence: hostname,
+        weight: -12,
+        explanation: "This domain is on your local trusted list. This does not guarantee the message is safe.",
+      });
+    }
 
     if (url.protocol !== "https:") {
       addSignalOnce(signals, seen, {
@@ -134,6 +165,12 @@ export function detectSuspiciousUrls(input) {
   return signals;
 }
 
+export function shouldSuppressPageWarning(hostname, settings = {}) {
+  const trustedDomains = normalizeDomainList(settings.trustedDomains);
+  const dismissedWarningSites = normalizeDomainList(settings.dismissedWarningSites);
+  return domainMatches(hostname, trustedDomains) || domainMatches(hostname, dismissedWarningSites);
+}
+
 function findFirstEvidence(text, patterns) {
   for (const pattern of patterns) {
     const match = text.match(pattern);
@@ -168,8 +205,22 @@ function getCombinationBonus(signals) {
   if (categories.has("Personal details") && categories.has("Impersonation")) bonus += 10;
   if (categories.has("Link") && categories.has("Prize or refund hook")) bonus += 8;
   if (categories.has("Emotional pressure") && categories.has("Money pressure")) bonus += 8;
+  if (categories.has("Parcel scam") && categories.has("Link")) bonus += 8;
+  if (categories.has("Bank code scam") && categories.has("Personal details")) bonus += 8;
   if (categories.size >= 4) bonus += 6;
   return bonus;
+}
+
+function getTrustedDomainAdjustment(text, signals, settings) {
+  const hasTrustedDomain = signals.some((signal) => signal.category === "Trusted site");
+  const hasBlockedDomain = signals.some((signal) => signal.category === "Blocked site");
+  const highPressureSignals = signals.filter((signal) => signal.weight >= 18).length;
+
+  if (hasBlockedDomain) return 0;
+  if (!hasTrustedDomain) return 0;
+  if (highPressureSignals >= 2) return -4;
+  if (/\b(?:password|PIN|verification code|OTP|send money|gift card|crypto)\b/i.test(text)) return -4;
+  return -10;
 }
 
 function getRiskLevel(score, sensitivity) {
@@ -184,23 +235,25 @@ function getRiskLevel(score, sensitivity) {
   return "safe";
 }
 
-function buildExplanation(riskLevel, signals) {
+function buildExplanation(riskLevel, signals, trustedDomainAdjustment = 0) {
   if (signals.length === 0) {
     return "Silver Shield did not find obvious scam warning signs. This does not guarantee it is safe.";
   }
 
-  const labels = signals.slice(0, 4).map((signal) => signal.label.toLowerCase());
+  const visibleSignals = signals.filter((signal) => signal.category !== "Trusted site");
+  const labels = (visibleSignals.length ? visibleSignals : signals).slice(0, 4).map((signal) => signal.label.toLowerCase());
   const summary = labels.join(", ");
+  const trustedNote = trustedDomainAdjustment < 0 ? " A trusted domain reduced the score, but this is not a guarantee." : "";
 
   if (riskLevel === "high") {
-    return `Silver Shield found high risk signs: ${summary}. Treat this carefully and verify through a trusted route.`;
+    return `Silver Shield found high risk signs: ${summary}. Treat this carefully and verify through a trusted route.${trustedNote}`;
   }
 
   if (riskLevel === "caution") {
-    return `Silver Shield found warning signs: ${summary}. Check before clicking, replying, or sending anything.`;
+    return `Silver Shield found warning signs: ${summary}. Check before clicking, replying, or sending anything.${trustedNote}`;
   }
 
-  return `Silver Shield found a small number of warning signs: ${summary}. Stay cautious and verify if anything feels unusual.`;
+  return `Silver Shield found a small number of warning signs: ${summary}. Stay cautious and verify if anything feels unusual.${trustedNote}`;
 }
 
 function buildRecommendedActions(riskLevel, settings) {
