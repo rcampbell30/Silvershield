@@ -9,6 +9,7 @@ This MVP is a Chrome/Edge-compatible Manifest V3 extension. It is intentionally 
 ## What this MVP does
 
 - Opens a family setup/onboarding page on first install.
+- Tells users to pin Silver Shield to the browser toolbar.
 - Lets a family member record who is being protected and who the trusted contact is.
 - Provides a popup where someone can paste suspicious text, email content, SMS content, or a link.
 - Runs a deterministic local scam-risk analyser in the browser.
@@ -24,6 +25,8 @@ This MVP is a Chrome/Edge-compatible Manifest V3 extension. It is intentionally 
 - Saves trusted contact and family setup settings locally.
 - Saves a small local history of recent checks using short previews only.
 - Includes a local demo page with fake scam examples.
+- Includes privacy, safety, QA, tester, and printable family checklist docs.
+- Can package the built extension into a ZIP for tester sharing.
 - Uses `chrome.storage.local` for settings and history.
 
 ## What it does not do yet
@@ -73,18 +76,27 @@ demo/
   demo.css
   demo.js
 
-public/
-  icons/
-    README.md
+docs/
+  QA.md
+  TESTER_GUIDE.md
+  family-safety-checklist.html
 
 scripts/
   build.mjs
+  package.mjs
   testRules.mjs
+
+public/
+  icons/
+    README.md
 
 manifest.json
 package.json
 tsconfig.json
 README.md
+PRIVACY.md
+SAFETY.md
+CHANGELOG.md
 ```
 
 PNG icons are generated into `dist/icons/` by `scripts/build.mjs`. Replace them with designed brand PNG files later if needed.
@@ -101,6 +113,12 @@ The onboarding page asks for:
 - Trusted contact phone/email.
 - Warning sensitivity.
 - Whether page warning banners should be enabled.
+
+It also tells users how to pin Silver Shield to the browser toolbar:
+
+1. Click the browser puzzle-piece/extensions icon.
+2. Find Silver Shield.
+3. Click the pin icon.
 
 These values are saved locally in `chrome.storage.local`. There is no sending, syncing, account creation, or contact messaging in this MVP.
 
@@ -132,6 +150,15 @@ Open `demo/demo.html` locally in your browser to test examples. It includes fake
 - Normal harmless message.
 
 The demo page has copy buttons so you can paste examples into the extension popup.
+
+## Documentation
+
+- `PRIVACY.md` — local-only privacy model and future AI privacy requirements.
+- `SAFETY.md` — safe wording, product limits, and emergency steps.
+- `CHANGELOG.md` — release history.
+- `docs/QA.md` — manual QA checklist before sharing builds.
+- `docs/TESTER_GUIDE.md` — non-technical tester instructions.
+- `docs/family-safety-checklist.html` — printable family scam safety checklist.
 
 ## Permissions model
 
@@ -174,9 +201,26 @@ The background worker may open the extension’s own onboarding page on fresh in
 npm install
 npm run build
 npm run test:rules
+npm run package
 ```
 
 This project currently uses a small zero-dependency build script instead of Vite. The source files stay modular under `src/`, and the build script copies them into `dist/`. The content script is bundled into one classic script because Manifest V3 content scripts should not rely on extension-page ES module imports.
+
+## Packaging for testers
+
+Run:
+
+```bash
+npm run package
+```
+
+This builds the extension and creates:
+
+```txt
+packages/silver-shield-extension-v0.1.0.zip
+```
+
+The `packages/` folder is ignored by git so local ZIP builds are not accidentally committed.
 
 ## Testing the risk engine
 
@@ -268,6 +312,10 @@ Chrome/Edge desktop extension MVP with onboarding and local trusted-contact setu
 
 Demo page, stronger UK rules, trusted/blocked domain controls, and per-site banner dismissal.
 
+### Phase 1.9
+
+Tester-ready package with privacy docs, safety docs, manual QA, tester guide, printable checklist, and ZIP packaging.
+
 ### Phase 2
 
 Better rule engine, allowlist/blocklist refinement, stronger suspicious-domain detection, and a proper family contact workflow.
@@ -287,7 +335,7 @@ iPhone/iPad family setup flow.
 ## Suggested next build tasks
 
 - Replace generated placeholder icons with polished Silver Shield PNG icons.
-- Add a printable/exportable one-page family safety checklist.
-- Add accessibility testing with keyboard-only navigation and screen reader labels.
 - Add optional custom rule packs for UK scams.
-- Add an onboarding step that teaches users to pin the extension.
+- Add an onboarding step with screenshots showing how to pin the extension in Chrome and Edge.
+- Run a small tester round with family/friends.
+- Tune false positives and false negatives based on tester feedback.
