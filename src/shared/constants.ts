@@ -8,6 +8,9 @@ export const DEFAULT_SETTINGS = {
   sensitivity: "normal",
   warningBannersEnabled: true,
   onboardingCompleted: false,
+  trustedDomains: [],
+  blockedDomains: [],
+  dismissedWarningSites: [],
   emergencyHelpText:
     "If money was sent or bank details were shared, contact your bank immediately using the number on the back of your card. In the UK, you can also report scams to Action Fraud.",
 };
@@ -19,6 +22,7 @@ export const STORAGE_KEYS = {
 
 export const MAX_HISTORY_ITEMS = 20;
 export const HISTORY_PREVIEW_LENGTH = 80;
+export const MAX_DOMAIN_LIST_ITEMS = 80;
 
 export const RISK_LEVEL_LABELS = {
   safe: "Likely safe",
