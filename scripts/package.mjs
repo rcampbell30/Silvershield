@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import { createWriteStream } from "node:fs";
 import { join, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const distDir = join(root, "dist");
 const packageDir = join(root, "packages");
 const outputPath = join(packageDir, "silver-shield-extension-v0.1.0.zip");
+const crcTable = createCrcTable();
 
 await mkdir(packageDir, { recursive: true });
 await rm(outputPath, { force: true });
@@ -124,15 +125,17 @@ function createEndRecord(fileCount, centralSize, centralStart) {
 function crc32(buffer) {
   let crc = -1;
   for (const byte of buffer) {
-    crc = (crc >>> 8) ^ table[(crc ^ byte) & 0xff];
+    crc = (crc >>> 8) ^ crcTable[(crc ^ byte) & 0xff];
   }
   return (crc ^ -1) >>> 0;
 }
 
-const table = Array.from({ length: 256 }, (_, index) => {
-  let c = index;
-  for (let k = 0; k < 8; k += 1) {
-    c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-  }
-  return c >>> 0;
-});
+function createCrcTable() {
+  return Array.from({ length: 256 }, (_, index) => {
+    let c = index;
+    for (let k = 0; k < 8; k += 1) {
+      c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    }
+    return c >>> 0;
+  });
+}
