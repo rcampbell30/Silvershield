@@ -88,7 +88,7 @@ export function detectSuspiciousUrls(input, settings = {}) {
         category: "Blocked site",
         label: "Link matches your blocked sites list",
         evidence: hostname,
-        weight: 42,
+        weight: 70,
         explanation: "This domain is on your local blocked list.",
       });
     }
@@ -207,6 +207,7 @@ function getCombinationBonus(signals) {
   if (categories.has("Emotional pressure") && categories.has("Money pressure")) bonus += 8;
   if (categories.has("Parcel scam") && categories.has("Link")) bonus += 8;
   if (categories.has("Bank code scam") && categories.has("Personal details")) bonus += 8;
+  if (categories.has("Remote access scam")) bonus += 30;
   if (categories.size >= 4) bonus += 6;
   return bonus;
 }
